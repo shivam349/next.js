@@ -1,6 +1,9 @@
 /**
  * File Traverser Utility
  * A simple utility to traverse and process files
+ * 
+ * Note: Uses synchronous file operations for simplicity.
+ * For production use with large-scale operations, consider async versions.
  */
 
 const fs = require('fs');
