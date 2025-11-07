@@ -1,6 +1,7 @@
-import { allowedDisplayValues } from '../constants'
 import { formatAvailableValues } from '../format-available-values'
 import { nextFontError } from '../next-font-error'
+import { validateDisplay } from '../validate-display'
+import { validateAllInList } from '../validate-in-list'
 import { googleFontsMetadata } from './google-fonts-metadata'
 
 type FontOptions = {
@@ -56,15 +57,7 @@ export function validateGoogleFontFunctionCall(
         )}\n\nRead more: https://nextjs.org/docs/messages/google-fonts-missing-subsets`
       )
     }
-    subsets.forEach((subset: string) => {
-      if (!availableSubsets.includes(subset)) {
-        nextFontError(
-          `Unknown subset \`${subset}\` for font \`${fontFamily}\`.\nAvailable subsets: ${formatAvailableValues(
-            availableSubsets
-          )}`
-        )
-      }
-    })
+    validateAllInList(subsets, availableSubsets, 'subset', fontFamily)
   }
 
   const fontWeights = fontFamilyData.weights
@@ -97,15 +90,7 @@ export function validateGoogleFontFunctionCall(
     )
   }
 
-  weights.forEach((selectedWeight) => {
-    if (!fontWeights.includes(selectedWeight)) {
-      nextFontError(
-        `Unknown weight \`${selectedWeight}\` for font \`${fontFamily}\`.\nAvailable weights: ${formatAvailableValues(
-          fontWeights
-        )}`
-      )
-    }
-  })
+  validateAllInList(weights, fontWeights, 'weight', fontFamily)
 
   if (styles.length === 0) {
     if (fontStyles.length === 1) {
@@ -117,23 +102,9 @@ export function validateGoogleFontFunctionCall(
     }
   }
 
-  styles.forEach((selectedStyle) => {
-    if (!fontStyles.includes(selectedStyle)) {
-      nextFontError(
-        `Unknown style \`${selectedStyle}\` for font \`${fontFamily}\`.\nAvailable styles: ${formatAvailableValues(
-          fontStyles
-        )}`
-      )
-    }
-  })
+  validateAllInList(styles, fontStyles, 'style', fontFamily)
 
-  if (!allowedDisplayValues.includes(display)) {
-    nextFontError(
-      `Invalid display value \`${display}\` for font \`${fontFamily}\`.\nAvailable display values: ${formatAvailableValues(
-        allowedDisplayValues
-      )}`
-    )
-  }
+  validateDisplay(display, fontFamily)
 
   if (axes) {
     if (!fontWeights.includes('variable')) {
