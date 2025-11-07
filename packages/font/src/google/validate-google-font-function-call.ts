@@ -1,6 +1,6 @@
-import { allowedDisplayValues } from '../constants'
 import { formatAvailableValues } from '../format-available-values'
 import { nextFontError } from '../next-font-error'
+import { validateDisplay } from '../validate-display'
 import { googleFontsMetadata } from './google-fonts-metadata'
 
 type FontOptions = {
@@ -127,13 +127,7 @@ export function validateGoogleFontFunctionCall(
     }
   })
 
-  if (!allowedDisplayValues.includes(display)) {
-    nextFontError(
-      `Invalid display value \`${display}\` for font \`${fontFamily}\`.\nAvailable display values: ${formatAvailableValues(
-        allowedDisplayValues
-      )}`
-    )
-  }
+  validateDisplay(display, fontFamily)
 
   if (axes) {
     if (!fontWeights.includes('variable')) {

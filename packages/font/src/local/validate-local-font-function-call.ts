@@ -1,6 +1,5 @@
-import { allowedDisplayValues } from '../constants'
-import { formatAvailableValues } from '../format-available-values'
 import { nextFontError } from '../next-font-error'
+import { validateDisplay } from '../validate-display'
 
 const extToFormat = {
   woff: 'woff',
@@ -50,13 +49,7 @@ export function validateLocalFontFunctionCall(
     declarations,
   } = fontData || ({} as any)
 
-  if (!allowedDisplayValues.includes(display)) {
-    nextFontError(
-      `Invalid display value \`${display}\`.\nAvailable display values: ${formatAvailableValues(
-        allowedDisplayValues
-      )}`
-    )
-  }
+  validateDisplay(display)
 
   if (!src) {
     nextFontError('Missing required `src` property')
